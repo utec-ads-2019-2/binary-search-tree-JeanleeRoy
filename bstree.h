@@ -57,16 +57,16 @@ class BSTree {
                 Node<T> **pointer = &root;
                 while (*pointer) {
                     if (data <= (*pointer)->data) {
-                        if (findToDel(pointer, data)) 
+                        if ((*pointer)->data == data) {
+                            if (!((*pointer)->left))
+                                deNode(pointer);
+                            else
+                                swapyDel(pointer);
                             return true;
-                        else
+                        } else
                             pointer = &(*pointer)->left;
-                    } else {
-                        if (findToDel(pointer, data)) 
-                            return true;
-                        else 
-                            pointer = &(*pointer)->right;   
-                    }
+                    } else 
+                        pointer = &(*pointer)->right;
                 }
             } return false;
         }
@@ -106,18 +106,6 @@ class BSTree {
         }
 
     private:
-        bool findToDel (Node<T>** pointer, T data) {
-            if ((*pointer)->data == data) {
-                if (!((*pointer)->left)) {
-                    deNode(pointer);
-                    return true;
-                } else {
-                    swapyDel(pointer);
-                    return true;
-                }
-            } return false;
-        }
-
         void deNode (Node<T>** pointer, bool right = true) {
             Node<T> *temp = *pointer;
             if (right) *pointer = temp->right;
@@ -132,16 +120,13 @@ class BSTree {
             while (*pointer) {
                 if (!(*pointer)->right) {
                     temp->data = (*pointer)->data;
-                    if (!(*pointer)->left) {
+                    if (!(*pointer)->left)
                         deNode(pointer);
-                        return;
-                    } else {
+                    else 
                         deNode(pointer, false);
-                        return;
-                    }
-                } else {
+                    return;
+                } else 
                     pointer = &(*pointer)->right;
-                }
             }
         }
 
@@ -158,13 +143,11 @@ class BSTree {
                 cout << nodo->data << " ";
                 if (nodo->left) printOrder(nodo->left, 0);
                 if (nodo->right) printOrder(nodo->right, 0);
-            }
-            if (order == 1) {
+            } if (order == 1) {
                 if (nodo->left) printOrder(nodo->left, 1);
                 cout << nodo->data << " ";
                 if (nodo->right) printOrder(nodo->right, 1);
-            }
-            if (order == 2) {
+            } if (order == 2) {
                 if (nodo->left) printOrder(nodo->left, 2);
                 if (nodo->right) printOrder(nodo->right, 2);
                 cout << nodo->data << " ";
