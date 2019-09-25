@@ -13,47 +13,43 @@ class BSTree {
         BSTree() : root{nullptr}, nodes{0} {};
 
         bool find(T data) { 
-            if (nodes > 0) {
-                Node<T> *temp = root;
-                while (temp) {
-                    if (data <= temp->data) {
-                        if (temp->data == data) 
-                            return true;
-                        else
-                            temp = temp->left;
-                    } else {
-                        if (temp->data == data) 
-                            return true;
-                        else
-                            temp = temp->right;
-                    }
+            if (!root) return false;
+            Node<T> *temp = root;
+            while (temp) {
+                if (data <= temp->data) {
+                    if (temp->data == data) 
+                        return true;
+                    else
+                        temp = temp->left;
+                } else {
+                    temp = temp->right;
                 }
             } return false;
         } 
 
         void insert(T data) {
             Node<T> *insert = new Node<T>(data);
+            this->nodes++;
             if (!root) {
                 root = insert;
                 return;
-            } else {
-                Node<T> *temp = root;
-                while (temp) {
-                    if (data <= temp->data) {
-                        if (temp->left) temp = temp->left;
-                        else {
-                            temp->left = insert;
-                            break;
-                        }
-                    } else {
-                        if (temp->right) temp = temp->right;
-                        else {
-                            temp->right = insert;
-                            break;
-                        }
+            }
+            Node<T> *temp = root;
+            while (temp) {
+                if (data <= temp->data) {
+                    if (temp->left) temp = temp->left;
+                    else {
+                        temp->left = insert;
+                        return;
+                    }
+                } else {
+                    if (temp->right) temp = temp->right;
+                    else {
+                        temp->right = insert;
+                        return;
                     }
                 }
-            } this->nodes++;
+            }
         }
 
         bool remove(T data) {
@@ -75,6 +71,41 @@ class BSTree {
             } return false;
         }
 
+        size_t size() {
+            return this->nodes;
+        }
+
+        size_t height() {
+            return Height(root);
+        }
+
+        void traversePreOrder() {
+            printOrder (root,0);
+        }
+
+        void traverseInOrder() {
+            printOrder (root,1);
+        }
+
+        void traversePostOrder() {
+            printOrder (root,2);
+        }
+
+        Iterator<T> begin() {
+            Iterator<T> it(root);
+            return ++it;
+        }
+
+        Iterator<T> end() {
+            Iterator<T> it;
+            return it;
+        }
+
+        ~BSTree() {
+            if (root) destroy(root);
+        }
+
+    private:
         bool findToDel (Node<T>** pointer, T data) {
             if ((*pointer)->data == data) {
                 if (!((*pointer)->left)) {
@@ -114,24 +145,12 @@ class BSTree {
             }
         }
 
-        size_t size() {
-            return this->nodes;
-        }
-
-        size_t height() {
-            // TODO
-        }
-
-        void traversePreOrder() {
-            printOrder (root,0);
-        }
-
-        void traverseInOrder() {
-            printOrder (root,1);
-        }
-
-        void traversePostOrder() {
-            printOrder (root,2);
+        int Height(Node<T>* nodo) {
+            if (!nodo) return 0;
+            int left = Height(nodo->left);
+            int right = Height(nodo->right);
+            if (left > right) return left + 1;
+            return right + 1;
         }
 
         void printOrder (Node<T>* nodo, int order) {
@@ -152,22 +171,10 @@ class BSTree {
             }
         }
 
-        Iterator<T> begin() {
-            // TODO
-        }
-
-        Iterator<T> end() { 
-            // TODO
-        }
-
         void destroy (Node<T>* nodo) {
             if (nodo->left) destroy(nodo->left);
             if (nodo->right) destroy(nodo->right);
             delete nodo;
-        }
-
-        ~BSTree() {
-            if (root) destroy(root);
         }
 };
 

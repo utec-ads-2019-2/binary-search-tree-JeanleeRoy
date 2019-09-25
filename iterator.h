@@ -2,39 +2,55 @@
 #define ITERATOR_H
 
 #include "node.h"
+#include <stack>
 
 template <typename T> 
 class Iterator {
     private:
+        stack <Node<T>*> mstack;
+        stack <Node<T>*> pstack;
         Node<T> *current;
+        bool pass;
 
     public:
-        Iterator() {
-            // TODO
+        Iterator() : current{nullptr}, pass{false} {}
+
+        Iterator(Node<T> *node) : current{node}, pass{false} {
+            mstack.push(nullptr);
         }
 
-        Iterator(Node<T> *node) {
-            // TODO
-        }
-
-        Iterator<T>& operator=(const Iterator<T> &other) {          
-            // TODO
+        Iterator<T>& operator=(const Iterator<T> &other) {      
+            this->current = other.current;
+            return *this;
         }
 
         bool operator!=(Iterator<T> other) {
-            // TODO
+            return this->current != other.current;
         }
 
         Iterator<T>& operator++() {
-            // TODO
+            if (pass) current = current->right;
+            while (current) {
+                mstack.push(current);
+                current = current->left;
+            }
+            current = mstack.top();
+            pstack.push(current);
+            mstack.pop();
+            pass = true;
+            return *this;
         }
 
         Iterator<T>& operator--() {
-            // TODO
+            pstack.pop();
+            current = pstack.top();
+            return *this;
         }
 
         T operator*() {
-            // TODO
+            if(this->current)
+                return this->current->data;
+            throw out_of_range("Empty Tree");
         }
 };
 
