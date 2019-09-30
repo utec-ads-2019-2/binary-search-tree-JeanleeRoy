@@ -29,6 +29,7 @@ class Iterator {
         }
 
         Iterator<T>& operator++() {
+            // Mantienes un flag para el primer paso, pero solo lo usas 1 vez. Me parece que podría mejorarse. De todas formas funciona bien
             if (pass) current = current->right;
             while (current) {
                 mstack.push(current);

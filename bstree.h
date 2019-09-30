@@ -28,6 +28,7 @@ class BSTree {
         } 
 
         void insert(T data) {
+            // Podrías reducir un poco el codigo reutilizando el find, quizás con un doble puntero
             Node<T> *insert = new Node<T>(data);
             this->nodes++;
             if (!root) {
